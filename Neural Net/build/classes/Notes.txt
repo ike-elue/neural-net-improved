@@ -1,0 +1,47 @@
+& = partial derivative
+$ = of corresponding number
+n = and all other connections
+delta = error$ * primefunc(nextLayerSum$) * sum
+delta = (error$ * primeFunc(nextLayerSum$) * weightThatMadeSum + error($+n) * primeFunc(nextLayerSum($+n) * weightThatMadeSum))
+weight = weight$ - learningRate * delta
+
+// Hidden
+error = errorNext
+nodedelta = error * primeFunc(sumNext)
+update = nodedelta * sum
+weight = weight - learningRate * update
+
+//Input
+error = summationofEachConnection(nodeDeltaNext * weightsConnectingToOut)
+nodeDelta = error * primeFunc(sumNext)
+update = nodedelta * sum 
+weight = weight - learningRate * update
+
+
+// If made backwards, it might be easier
+- backward
+    - output
+        - // Error set manually from layer
+        - 
+        nodeDelta = error * primeFunc(sum)
+        weights[i] = weights[i] - learningRate * nodeDelta * previousConnection[i].getSum()
+        previousConnections[i].setError(previousConnections[i].getError + (weights[i] * nodeDelta))
+    - hidden
+        - same as output
+    - input
+        - nothing because it has no previous connections
+    - reset method
+        - also set error to 0 when reset
+- forward
+    - input
+        - nothing because no previous
+    - hidden
+        - 
+        loop(i) {
+            sum += connectionsPrevious[i].getSum() * weights[i];
+        }
+        sum = ativationFunc(sum);
+    - output
+        - same as hidden
+
+}
