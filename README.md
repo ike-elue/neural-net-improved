@@ -1,7 +1,7 @@
 # neural-net-improved
 A Neural Network that is pretty much modular
 
-An Example Output:
+## An Example Output:
 
 0th iteration --> Error: 44.993%
 
