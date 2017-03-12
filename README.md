@@ -1,6 +1,7 @@
 # neural-net-improved
-A Neural Network that is pretty much modular
+A Neural Network that is pretty much modular.
 
+Sometimes gets stuck in local minimum.
 ## An Example Output:
 
 0th iteration --> Error: 44.993%
