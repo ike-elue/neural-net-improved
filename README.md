@@ -3,7 +3,7 @@ A Neural Network that is pretty much modular
 
 ## An Example Output:
 
-0th iteration --> Error: 44.993%
+> 0th iteration --> Error: 44.993%
 
 10000th iteration --> Error: 0.009%
 
