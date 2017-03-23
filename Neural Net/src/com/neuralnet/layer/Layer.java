@@ -38,6 +38,11 @@ public abstract class Layer {
             neuron.backward(learningRate, timestep); 
     }
     
+    public final void finalBackward() {
+        for(Neuron neuron : neurons)
+            neuron.finalBackward(); 
+    }
+    
     public void connectTo(Layer layer, boolean useBias) {
         for (Neuron neuron : neurons) {
             neuron.connectToMultiple(layer.getNeurons(), useBias);
