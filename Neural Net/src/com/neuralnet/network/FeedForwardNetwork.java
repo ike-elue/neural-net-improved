@@ -20,16 +20,16 @@ public class FeedForwardNetwork extends Network {
     }
     
     @Override
-    protected void initLayers(int activationType) {
+    protected void initLayers(int activationType, int biggestRecurrentData) {
         if(neuronCounts.size() < 3) {
             System.out.println("Not Enough Layers");
             return;
         }
-        layers.add(new FeedForwardInputLayer(neuronCounts.get(0), neuronCounts.get(1), activationType));
+        layers.add(new FeedForwardInputLayer(neuronCounts.get(0), neuronCounts.get(1), activationType, biggestRecurrentData));
         for(int i = 1; i < neuronCounts.size() - 1; i++) {
-            layers.add(new FeedForwardHiddenLayer(neuronCounts.get(i), neuronCounts.get(i + 1), activationType));
+            layers.add(new FeedForwardHiddenLayer(neuronCounts.get(i), neuronCounts.get(i + 1), activationType, biggestRecurrentData));
         }
-        layers.add(new FeedForwardOutputLayer(neuronCounts.get(neuronCounts.size() - 1), 0, activationType));
+        layers.add(new FeedForwardOutputLayer(neuronCounts.get(neuronCounts.size() - 1), 0, activationType, biggestRecurrentData));
     }
     
 }

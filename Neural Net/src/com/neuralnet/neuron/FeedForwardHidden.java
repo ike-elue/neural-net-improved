@@ -11,13 +11,13 @@ package com.neuralnet.neuron;
  */
 public class FeedForwardHidden extends FeedForwardInput{
 
-    public FeedForwardHidden(int connections, int activationType) {
-        super(connections, activationType);
+    public FeedForwardHidden(int connections, int biggestRecurrentData, int activationType) {
+        super(connections, biggestRecurrentData, activationType);
     }
     
     @Override
-    public void forward() {
-        sum = activationFunc(sum);
-        super.forward();
+    public void forward(int timestep) {
+        sum[timestep] = activationFunc(sum[timestep]);
+        super.forward(timestep);
     }
 }
