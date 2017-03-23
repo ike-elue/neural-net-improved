@@ -11,18 +11,17 @@ package com.neuralnet.neuron;
  */
 public class FeedForwardOutput extends Neuron{
 
-    public FeedForwardOutput(int connections, int activationType) {
-        super(connections, activationType);
+    public FeedForwardOutput(int connections, int biggestRecurrentData, int activationType) {
+        super(connections, biggestRecurrentData, activationType);
     }
     
     @Override
-    public void forward() {
-        sum = activationFunc(sum);
+    public void forward(int timestep) {
+        sum[timestep] = activationFunc(sum[timestep]);
     }
 
-    //Requires a previous calc of error (so, real - sum)
     @Override
-    public void backward(double learningRate) {
-        nodeDelta = error * activationPrimeFunc(sum);
+    public void backward(double learningRate, int timestep) {
+        nodeDelta[timestep] += error[timestep] * activationPrimeFunc(sum[timestep]);
     }
 }

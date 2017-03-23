@@ -11,23 +11,23 @@ package com.neuralnet.neuron;
  */
 public class FeedForwardInput extends Neuron{
 
-    public FeedForwardInput(int connections, int activationType) {
-        super(connections, activationType);
+    public FeedForwardInput(int connections, int biggestRecurrentData, int activationType) {
+        super(connections, biggestRecurrentData, activationType);
     }
     
     @Override
-    public void forward() {
+    public void forward(int timestep) {
         for(int i = 0; i < connections.length; i++) {
-            connections[i].addToSum(sum * weights[i]);
+            connections[i].addToSum(sum[timestep] * weights[i][timestep], timestep);
         }
     }
     
     @Override
-    public void backward(double learningRate) {
+    public void backward(double learningRate, int timestep) {
         for(int i = 0; i < connections.length; i++) {
-            weights[i] -= learningRate * connections[i].getNodeDelta() * sum;
-            error += weights[i] * connections[i].getNodeDelta();
+            weights[i][timestep] -= learningRate * connections[i].getNodeDelta(timestep) * sum[timestep];
+            error[timestep] += weights[i][timestep] * connections[i].getNodeDelta(timestep);
         }
-        nodeDelta = error * activationPrimeFunc(sum);
+        nodeDelta[timestep] += error[timestep] * activationPrimeFunc(sum[timestep]);
     }
 }

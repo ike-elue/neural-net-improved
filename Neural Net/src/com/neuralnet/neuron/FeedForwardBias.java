@@ -11,14 +11,15 @@ package com.neuralnet.neuron;
  */
 public class FeedForwardBias extends FeedForwardInput{
 
-    public FeedForwardBias(int connections, int activationType) {
-        super(connections, activationType);
-        sum = 1;
+    public FeedForwardBias(int connections, int biggestRecurrentData, int activationType) {
+        super(connections, biggestRecurrentData, activationType);
+        for(int i = 0; i < sum.length; i++)
+            sum[i] = 1;
     }
     
     @Override
-    public void forward() {
-        sum = 1;
-        super.forward();
+    public void forward(int timestep) {
+        sum[timestep] = 1;
+        super.forward(timestep);
     }
 }

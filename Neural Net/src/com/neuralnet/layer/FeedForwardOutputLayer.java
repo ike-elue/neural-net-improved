@@ -13,14 +13,14 @@ import com.neuralnet.neuron.FeedForwardOutput;
  */
 public class FeedForwardOutputLayer extends Layer {
 
-    public FeedForwardOutputLayer(int neuronCount, int nextLayerNeuronCount, int activationType) {
-        super(neuronCount - 1, nextLayerNeuronCount, activationType);
+    public FeedForwardOutputLayer(int neuronCount, int nextLayerNeuronCount, int activationType, int biggestRecurrentData) {
+        super(neuronCount - 1, nextLayerNeuronCount, activationType, biggestRecurrentData);
     }
 
     @Override
-    public void initNeurons(int neuronCount, int nextLayerNeuronCount, int activationType) {
+    public void initNeurons(int neuronCount, int nextLayerNeuronCount, int activationType, int biggestRecurrentData) {
         for(int i = 0; i < neuronCount; i++) {
-            addNeuron(new FeedForwardOutput(0, activationType));
+            addNeuron(new FeedForwardOutput(0, biggestRecurrentData, activationType));
         }
     }
 }

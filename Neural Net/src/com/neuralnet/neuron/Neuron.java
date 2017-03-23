@@ -14,23 +14,23 @@ import com.neuralnet.network.Network;
 public abstract class Neuron {
     
     protected Neuron[] connections;
-    protected double[] weights;
-    protected double sum, error, nodeDelta;
+    protected double[][] weights;
+    protected double[] sum, error, nodeDelta;
     private int pointer;
     private final int activationType;
     
-    public Neuron(int connections, int activationType) {
+    public Neuron(int connections, int biggestRecurrentData, int activationType) {
         this.connections = new Neuron[connections]; 
-        this.weights = new double[connections];
+        this.weights = new double[connections][biggestRecurrentData];
         this.activationType = activationType;
         pointer = 0;
-        sum = 0;
-        error = 0;
-        nodeDelta = 0;
+        sum = new double[biggestRecurrentData];
+        error = new double[biggestRecurrentData];
+        nodeDelta = new double[biggestRecurrentData];
     }
     
-    public abstract void forward();
-    public abstract void backward(double learningRate);
+    public abstract void forward(int timestep);
+    public abstract void backward(double learningRate, int timestep);
     
     public void connectToMultiple(Neuron[] ns, boolean useBias) {
         if(pointer != 0)
@@ -45,12 +45,15 @@ public abstract class Neuron {
         if(pointer >= connections.length)
             return;
         connections[pointer] = n;
-        weights[pointer] = generateRand();
+        weights[pointer][0] = generateRand();
+        for(int i = 1; i < weights[0].length; i++) {
+            weights[pointer][i] = weights[pointer][0];
+        }
         pointer++;
     }
     
-    public void addToSum(double value) {
-        sum += value;
+    public void addToSum(double value, int timestep) {
+        sum[timestep] += value;
     }
     
     public double activationFunc(double sum) {
@@ -76,29 +79,42 @@ public abstract class Neuron {
     }
     
     public final void reset() {
-       sum = 0;
-       error = 0;
-       nodeDelta = 0;
+       for(int i = 0; i < error.length; i++) {
+           error[i] = 0;
+           nodeDelta[i] = 0;
+       }
+    }
+    
+    public final void fullReset() {
+       for(int i = 0; i < error.length; i++) {
+           sum[i] = 0;
+           error[i] = 0;
+           nodeDelta[i] = 0;
+       }
     }
 
-    public double getNodeDelta() {
-        return nodeDelta;
+    public double getNodeDelta(int timestep) {
+        return nodeDelta[timestep];
     }
     
-    public double getError() {
-        return error;
+    public double getError(int timestep) {
+        return error[timestep];
     }
     
-    public double getSum() {
-        return sum;
+    public double getSum(int timestep) {
+        return sum[timestep];
     }
     
-    public void setError(double error) {
-        this.error = error;
+    public double getSumLast() {
+        return sum[sum.length - 1];
     }
     
-    public void setSum(double sum) {
-        this.sum = sum;
+    public void setError(double error, int timestep) {
+        this.error[timestep] = error;
+    }
+    
+    public void setSum(double sum, int timestep) {
+        this.sum[timestep] = sum;
     }
     
     public void hasConnections() {
@@ -113,7 +129,7 @@ public abstract class Neuron {
     public String toString() {
         String str = "Weights: ";
         for(int i = 0; i < weights.length; i++) 
-            str += weights[i] + ", ";
+            str += weights[i][0] + ", ";
         return str.substring(0, str.length() - 2);
     }
 }

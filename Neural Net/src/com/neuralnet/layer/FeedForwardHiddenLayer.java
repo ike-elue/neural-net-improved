@@ -13,15 +13,15 @@ import com.neuralnet.neuron.FeedForwardHidden;
  * @author CSLAB313-1740
  */
 public class FeedForwardHiddenLayer extends Layer{
-    public FeedForwardHiddenLayer(int neuronCount, int nextLayerNeuronCount, int activationType) {
-        super(neuronCount, nextLayerNeuronCount, activationType);
+    public FeedForwardHiddenLayer(int neuronCount, int nextLayerNeuronCount, int activationType, int biggestRecurrentData) {
+        super(neuronCount, nextLayerNeuronCount, activationType, biggestRecurrentData);
     }
 
     @Override
-    public void initNeurons(int neuronCount, int nextLayerNeuronCount, int activationType) {
+    public void initNeurons(int neuronCount, int nextLayerNeuronCount, int activationType, int biggestRecurrentData) {
         for(int i = 0; i < neuronCount - 1; i++) {
-            addNeuron(new FeedForwardHidden(nextLayerNeuronCount, activationType));
+            addNeuron(new FeedForwardHidden(nextLayerNeuronCount, biggestRecurrentData, activationType));
         }
-        addNeuron(new FeedForwardBias(nextLayerNeuronCount, activationType));
+        addNeuron(new FeedForwardBias(nextLayerNeuronCount, biggestRecurrentData, activationType));
     }
 }

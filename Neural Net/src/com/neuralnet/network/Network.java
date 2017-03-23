@@ -6,6 +6,8 @@
 package com.neuralnet.network;
 
 import com.neuralnet.layer.Layer;
+import com.neuralnet.util.Data;
+import com.neuralnet.util.Util;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -17,13 +19,13 @@ import java.util.ArrayList;
 public abstract class Network {
     public static final int SIGMOID = 0, HYPERTAN = 1;
     private final int activationType;
-    private final double learningRate;
-    private double error;
-    private BigDecimal errorPercent;
+    protected final double learningRate;
+    protected double[] error;
+    protected BigDecimal errorPercent;
     
     protected final ArrayList<Layer> layers;
     protected final ArrayList<Integer> neuronCounts;
-    private final ArrayList<double[]> trainingDataIn, trainingDataOut;
+    protected final ArrayList<double[][]> trainingDataIn, trainingDataOut;
     
     public Network(int type, double learningRate) {
         layers = new ArrayList<>();
@@ -32,10 +34,10 @@ public abstract class Network {
         trainingDataOut = new ArrayList<>();
         this.learningRate = learningRate;
         this.activationType = type;
-        error = 0;
+        error = null;
     }
     
-    protected abstract void initLayers(int activationType);
+    protected abstract void initLayers(int activationType, int biggestRecurrentData);
     
     public void addLayer(int neuronCount) {
         neuronCounts.add(neuronCount);
@@ -46,12 +48,9 @@ public abstract class Network {
             this.neuronCounts.add(neuronCount);
     }
     
-    private void init(double[][] input, double[][] output) {
-        for(int i = 0; i < input.length; i++) {
-            trainingDataIn.add(input[i]);
-            trainingDataOut.add(output[i]);
-        }
-        initLayers(activationType);
+    private void init(Data input, Data output, int biggestRecurrentData) {
+        addData(input, output);
+        initLayers(activationType, biggestRecurrentData);
         connect();
     }
     
@@ -63,21 +62,35 @@ public abstract class Network {
         }
     }
     
-    public void train(double[][] inputs, double[][] outputs, int iterations, int everyNth) {
-        if(inputs.length != outputs.length) {
-            System.out.println("Data Mismatch");
+    // Can be overriden
+    protected boolean conditional(Data inputs, Data outputs) {
+        return inputs.length != outputs.length;
+    }
+    
+    // Can be overriden
+    protected void addData(Data input, Data output) {
+        for(int i = 0; i < input.length; i++) {
+            trainingDataIn.add(input.get(i));
+            trainingDataOut.add(output.get(i));
+        }
+    }
+    
+    public final void train(Data inputs, Data outputs, int iterations, int everyNth, int biggestRecurrentData) { // Has to be the biggest size of rows for a single Data entry
+        if(conditional(inputs, outputs)) {
             return;
         }
-        init(inputs, outputs);
+        init(inputs, outputs, biggestRecurrentData);
         if(layers.isEmpty())
             return;
-        for(int i = 0; i < iterations; i++) {
+        error = new double[trainingDataIn.size()];
+        for(int i = 0; i < iterations + 1; i++) {
             update(i, everyNth);
         }
         System.out.println("\nFinal Sturcture For Neural Network " + this);
     }
     
-    public double[][] predict(double[][] inputs, int acceptablePercent) {
+    // Can override
+    public double[][] predict(Data inputs, int acceptablePercent) {
         if(layers.isEmpty())
             return null;
         if(errorPercent != null && (int)Double.parseDouble(errorPercent.toString()) > acceptablePercent) {
@@ -86,59 +99,66 @@ public abstract class Network {
         }
         double[][] outputs = new double[inputs.length][getLastLayer().getNeurons().length];
         for(int i = 0; i < inputs.length; i++) {
-            for(int j = 0; j < inputs[i].length; j++) {
-                layers.get(0).getNeuron(j).setSum(inputs[i][j]);
+            for(int j = 0; j < inputs.get(i).length; j++) { // Goes through each timestep
+                for(int k = 0; k < inputs.get(i)[j].length; k++) { // Goes through each data point per timestep
+                    layers.get(0).getNeuron(k).setSum(inputs.get(i)[j][k], j);
+                }
+                forward(j);
             }
-            forward(); 
-            for(int j = 0; j < outputs[i].length; j++) {
-                outputs[i][j] = getLastLayer().getNeuron(j).getSum();
+            for(int j = 0; j < outputs[i].length; j++) { //Goes through each timestep output
+                outputs[i][j] = getLastLayer().getNeuron(j).getSumLast();
             }
+            resetValues();
         }
+        
         return outputs;
     }
     
-    private void update(int iterationCount, int everyNth) {
+    protected void update(int iterationCount, int everyNth) {
         for(int i = 0; i < trainingDataIn.size(); i++) {
-            error = 0;
-            for(int j = 0; j < trainingDataIn.get(i).length; j++) {
-                layers.get(0).getNeuron(j).setSum(trainingDataIn.get(i)[j]);
+            error[i] = 0;
+            for(int j = 0; j < trainingDataIn.get(i).length; j++) { // Goes through each timestep
+                for(int k = 0; k < trainingDataIn.get(i)[j].length; k++) { // Goes through each data point per timestep
+                    layers.get(0).getNeuron(k).setSum(trainingDataIn.get(i)[j][k], j);
+                }
+                forward(j);
             }
             
-            forward(); 
-            
-            for(int j = 0; j < trainingDataOut.get(i).length; j++) {
-                error += 0.5 * ((trainingDataOut.get(i)[j] - getLastLayer().getNeuron(j).getSum()) *(trainingDataOut.get(i)[j] - getLastLayer().getNeuron(j).getSum()));
-                getLastLayer().getNeuron(j).setError(getLastLayer().getNeuron(j).getSum() - trainingDataOut.get(i)[j]);
+            for(int j = 0; j < trainingDataOut.get(i).length; j++) { // Goes through each timestep
+                for(int k = 0; k < trainingDataOut.get(i)[j].length; k++) { // Goes through each data point per timestep
+                    error[i] += 0.5 * ((trainingDataOut.get(i)[j][k] - getLastLayer().getNeuron(k).getSum(j)) *(trainingDataOut.get(i)[j][k] - getLastLayer().getNeuron(k).getSum(j)));
+                    getLastLayer().getNeuron(k).setError(getLastLayer().getNeuron(k).getSum(j) - trainingDataOut.get(i)[j][k], j);
+                }
+                backward(j);
             }
-            
-            backward();
             resetValues();
         }
         if(iterationCount % everyNth == 0) {
-            errorPercent = new BigDecimal(error * 100).setScale(3, RoundingMode.DOWN);
+            double e = Util.average(error);
+            errorPercent = new BigDecimal(e * 100).setScale(3, RoundingMode.DOWN);
             System.out.println(iterationCount + "th iteration --> Error: " + errorPercent + "%");
         }
     }
     
-    private void forward() {
+    private void forward(int timestep) {
         layers.stream().forEach((layer) -> {
-            layer.forward();
+            layer.forward(timestep);
         });
     }
     
-    private void backward() {
+    private void backward(int timestep) {
         for(int i = layers.size() - 1; i > -1; i--) {
-            layers.get(i).backward(learningRate);
+            layers.get(i).backward(learningRate, timestep);
         }
     }
     
-    private void resetValues() {
+    protected void resetValues() {
         layers.stream().forEach((layer) -> { 
-            layer.reset();
+            layer.fullReset();
         });
     }
     
-    public Layer getLastLayer() {
+    protected Layer getLastLayer() {
         return layers.get(layers.size() - 1);
     }
     

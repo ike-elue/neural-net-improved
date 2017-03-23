@@ -15,12 +15,12 @@ public abstract class Layer {
     private final Neuron[] neurons;
     private int pointer;
     
-    public Layer(int neuronCount, int nextLayerNeuronCount, int activationType) {
+    public Layer(int neuronCount, int nextLayerNeuronCount, int activationType, int biggestRecurrentData) {
         neurons = new Neuron[neuronCount + 1];
-        initNeurons(neuronCount + 1, nextLayerNeuronCount, activationType);
+        initNeurons(neuronCount + 1, nextLayerNeuronCount, activationType, biggestRecurrentData);
     }
     
-    public abstract void initNeurons(int neuronCount, int nextLayerNeuronCount, int activationType);
+    public abstract void initNeurons(int neuronCount, int nextLayerNeuronCount, int activationType, int biggestRecurrentData);
 
     public void addNeuron(Neuron n) {
         if(pointer >= neurons.length)
@@ -29,13 +29,13 @@ public abstract class Layer {
         pointer++;
     }
 
-    public void forward() {
+    public void forward(int timestep) {
         for(Neuron neuron : neurons)
-            neuron.forward(); 
+            neuron.forward(timestep); 
     }
-    public void backward(double learningRate) {
+    public void backward(double learningRate, int timestep) {
         for(Neuron neuron : neurons)
-            neuron.backward(learningRate); 
+            neuron.backward(learningRate, timestep); 
     }
     
     public void connectTo(Layer layer, boolean useBias) {
@@ -47,6 +47,11 @@ public abstract class Layer {
     public void reset() {
         for(Neuron neuron : neurons)
             neuron.reset();
+    }
+    
+    public void fullReset() {
+        for(Neuron neuron : neurons)
+            neuron.fullReset();
     }
     
     public Neuron[] getNeurons() {
