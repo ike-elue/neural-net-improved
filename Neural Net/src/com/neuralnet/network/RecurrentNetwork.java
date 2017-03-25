@@ -29,7 +29,7 @@ public class RecurrentNetwork extends Network{
         }
         layers.add(new FeedForwardInputLayer(neuronCounts.get(0), neuronCounts.get(1), activationType, biggestRecurrentData));
         for(int i = 1; i < neuronCounts.size() - 1; i++) {
-            layers.add(new RecurrentContextLayer(neuronCounts.get(i), neuronCounts.get(i), activationType, biggestRecurrentData));
+            layers.add(new RecurrentContextLayer(neuronCounts.get(i) - 1, neuronCounts.get(i), activationType, biggestRecurrentData));
             layers.add(new FeedForwardHiddenLayer(neuronCounts.get(i), neuronCounts.get(i + 1), activationType, biggestRecurrentData));
         }
         layers.add(new FeedForwardOutputLayer(neuronCounts.get(neuronCounts.size() - 1), 0, activationType, biggestRecurrentData));
