@@ -42,9 +42,8 @@ public class RecurrentNetwork extends Network{
         layers.get(0).connectTo(layers.get(2), true);
         for(int i = 1; i < layers.size() - 1; i += 2) {
             layers.get(i).connectTo(layers.get(i + 1), i < layers.size() - 2);
-            layers.get(i + 1).connectTo(layers.get(i + 2), i < layers.size() - 2);
+            layers.get(i + 1).connectTo(layers.get(i + 2), i + 1 < layers.size() - 2);
         }
-        System.out.println("Success");
     }
     
     @Override

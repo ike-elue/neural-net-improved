@@ -47,4 +47,33 @@ public class Util {
         }
         return a;
     }
+    
+    public static double[][] createMulti(char[] chars) {
+        if(chars == null)
+            return null;
+        Interpreter inter = new Interpreter();
+        double[][] values = new double[chars.length][4]; // For now
+        for(int i = 0; i < values.length; i++) {
+            values[i] = inter.access(chars[i]);
+        }
+        return values;
+    }
+    
+    public static Character[] getCharacter(double[][] values) {
+        if(values == null)
+            return null;
+        Interpreter inter = new Interpreter();
+        Character[] chars = new Character[values.length];
+        for(int i = 0; i < chars.length; i++) {
+            chars[i] = inter.access(values[i]);
+        }
+        return chars;
+    }
+    
+    public static String concat(Character[] chars) {
+        String str = "";
+        for(char c : chars)
+            str += c;
+        return str;
+    } 
 }

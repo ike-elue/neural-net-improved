@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public abstract class Network {
     public static final int SIGMOID = 0, HYPERTAN = 1;
     private final int activationType;
+    private final int biggestRecurrentData; // Has to be the biggest size of rows for a single Data entry
     protected final double learningRate;
     protected double[] error;
     protected BigDecimal errorPercent;
@@ -27,13 +28,14 @@ public abstract class Network {
     protected final ArrayList<Integer> neuronCounts;
     protected final ArrayList<double[][]> trainingDataIn, trainingDataOut;
     
-    public Network(int type, double learningRate) {
+    public Network(int type, double learningRate, int biggestRecurrentData) {
         layers = new ArrayList<>();
         neuronCounts = new ArrayList<>();
         trainingDataIn = new ArrayList<>();
         trainingDataOut = new ArrayList<>();
         this.learningRate = learningRate;
         this.activationType = type;
+        this.biggestRecurrentData = biggestRecurrentData;
         error = null;
     }
     
@@ -48,13 +50,14 @@ public abstract class Network {
             this.neuronCounts.add(neuronCount);
     }
     
-    private void init(Data input, Data output, int biggestRecurrentData) {
+    private void init(Data input, Data output) {
         addData(input, output);
         initLayers(activationType, biggestRecurrentData);
         connect();
     }
     
-    private void connect() {
+    // Can be Overriden
+    protected void connect() {
         if(layers.isEmpty())
             return;
         for(int i = 0; i < layers.size() - 1; i++) {
@@ -75,11 +78,12 @@ public abstract class Network {
         }
     }
     
-    public final void train(Data inputs, Data outputs, int iterations, int everyNth, int biggestRecurrentData) { // Has to be the biggest size of rows for a single Data entry
+    public final void train(Data inputs, Data outputs, int iterations, int everyNth) { 
         if(conditional(inputs, outputs)) {
+            System.out.println("Bad Data");
             return;
         }
-        init(inputs, outputs, biggestRecurrentData);
+        init(inputs, outputs);
         if(layers.isEmpty())
             return;
         error = new double[trainingDataIn.size()];
@@ -124,13 +128,14 @@ public abstract class Network {
                 forward(j);
             }
             
-            for(int j = 0; j < trainingDataOut.get(i).length; j++) { // Goes through each timestep
+            for(int j = trainingDataOut.get(i).length - 1; j > -1; j--) { // Goes through each timestep
                 for(int k = 0; k < trainingDataOut.get(i)[j].length; k++) { // Goes through each data point per timestep
                     error[i] += 0.5 * ((trainingDataOut.get(i)[j][k] - getLastLayer().getNeuron(k).getSum(j)) *(trainingDataOut.get(i)[j][k] - getLastLayer().getNeuron(k).getSum(j)));
                     getLastLayer().getNeuron(k).setError(getLastLayer().getNeuron(k).getSum(j) - trainingDataOut.get(i)[j][k], j);
                 }
                 backward(j);
             }
+            finalBackward();
             resetValues();
         }
         if(iterationCount % everyNth == 0) {
@@ -149,6 +154,12 @@ public abstract class Network {
     private void backward(int timestep) {
         for(int i = layers.size() - 1; i > -1; i--) {
             layers.get(i).backward(learningRate, timestep);
+        }
+    }
+    
+    private void finalBackward() {
+        for(int i = layers.size() - 1; i > -1; i--) {
+            layers.get(i).finalBackward();
         }
     }
     

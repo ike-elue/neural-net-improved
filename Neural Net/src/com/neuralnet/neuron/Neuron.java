@@ -16,6 +16,7 @@ public abstract class Neuron {
     protected Neuron[] connections;
     protected double[][] weights;
     protected double[] sum, error, nodeDelta;
+    private double numberHolder;
     private int pointer;
     private final int activationType;
     
@@ -24,6 +25,7 @@ public abstract class Neuron {
         this.weights = new double[connections][biggestRecurrentData];
         this.activationType = activationType;
         pointer = 0;
+        numberHolder = 0;
         sum = new double[biggestRecurrentData];
         error = new double[biggestRecurrentData];
         nodeDelta = new double[biggestRecurrentData];
@@ -31,6 +33,21 @@ public abstract class Neuron {
     
     public abstract void forward(int timestep);
     public abstract void backward(double learningRate, int timestep);
+    
+    public final void finalBackward() {
+        for(int i = 0; i < weights.length; i++) { // Each single value
+            for(int j = 0; j < weights[0].length; j++) { // Each timestep per single value
+                numberHolder += weights[i][j]; 
+            }
+            weights[i][0] = numberHolder/weights[0].length;
+            numberHolder = 0;
+        }
+        for(int i = 0; i < weights.length; i++) {
+            for(int j = 1; j < weights[0].length; j++) {
+                weights[i][j] = weights[i][0];
+            }
+        }
+    }
     
     public void connectToMultiple(Neuron[] ns, boolean useBias) {
         if(pointer != 0)

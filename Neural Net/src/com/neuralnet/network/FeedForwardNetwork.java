@@ -16,7 +16,7 @@ import com.neuralnet.layer.FeedForwardOutputLayer;
 public class FeedForwardNetwork extends Network {
 
     public FeedForwardNetwork(int activationType, double learningRate) {
-        super(activationType, learningRate);
+        super(activationType, learningRate, 1);
     }
     
     @Override

@@ -18,15 +18,18 @@ public class FeedForwardInput extends Neuron{
     @Override
     public void forward(int timestep) {
         for(int i = 0; i < connections.length; i++) {
-            connections[i].addToSum(sum[timestep] * weights[i][timestep], timestep);
+            if(connections[i] != null)
+                connections[i].addToSum(sum[timestep] * weights[i][timestep], timestep);
         }
     }
     
     @Override
     public void backward(double learningRate, int timestep) {
         for(int i = 0; i < connections.length; i++) {
-            weights[i][timestep] -= learningRate * connections[i].getNodeDelta(timestep) * sum[timestep];
-            error[timestep] += weights[i][timestep] * connections[i].getNodeDelta(timestep);
+            if(connections[i] != null)  {
+                weights[i][timestep] -= learningRate * connections[i].getNodeDelta(timestep) * sum[timestep];
+                error[timestep] += weights[i][timestep] * connections[i].getNodeDelta(timestep);
+            }
         }
         nodeDelta[timestep] += error[timestep] * activationPrimeFunc(sum[timestep]);
     }
