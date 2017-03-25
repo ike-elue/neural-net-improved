@@ -18,7 +18,7 @@ public class RecurrentContextLayer extends Layer {
 
     @Override
     public void initNeurons(int neuronCount, int nextLayerNeuronCount, int activationType, int biggestRecurrentData) {
-        for(int i = 0; i < neuronCount - 1; i++) {
+        for(int i = 0; i < neuronCount; i++) {
             addNeuron(new RecurrentContext(nextLayerNeuronCount, biggestRecurrentData, activationType));
         }
     }
