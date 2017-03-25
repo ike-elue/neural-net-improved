@@ -9,7 +9,6 @@ import com.neuralnet.network.Network;
 import com.neuralnet.network.RecurrentNetwork;
 import com.neuralnet.util.Data;
 import com.neuralnet.util.Util;
-import java.util.Arrays;
 
 /**
  *
@@ -22,15 +21,18 @@ public class Main {
      */
 
     public static void main(String[] args) {
-// Start of Recurrent
+// Recurrent SIGMOID (HYPERTAN doesn't work yet when trying to implement)
         Network net = new RecurrentNetwork(Network.SIGMOID, 1, 4);
-        net.addLayers(new int[] {4, 5, 4});
-        Data in = new Data(1);
-        in.set(0, Util.createMulti(new char[]{'h','e','l','o'}));
-        Data out = new Data(1);
-        out.set(0, Util.createMulti(new char[]{'e','l','o','o'}));
+        net.addLayers(new int[] {26, 27, 26});
+        Data in = new Data(2);
+        in.add(Util.createMulti(new char[]{'h','e','l','l'}));
+        in.add(Util.createMulti(new char[]{'w','o','r','l'}));
+        Data out = new Data(2);
+        out.add(Util.createMulti(new char[]{'e','l','l','o'}));
+        out.add(Util.createMulti(new char[]{'o','r','l','d'}));
         net.train(in, out, 100000, 20000);
-        System.out.println("Input -> " + Util.concat(Util.getCharacter(in.get(0))) + "]" + Util.concat(Util.getCharacter(net.predict(in, 1000))) + "<- Output");
+        System.out.println("Input -> " + Util.concat(Util.getCharacter(in.get(0))) + "]" + Util.concat(Util.getCharacter(net.predict(in, 10))).substring(0,1) + "<- Output");
+        System.out.println("Input -> " + Util.concat(Util.getCharacter(in.get(1))) + "]" + Util.concat(Util.getCharacter(net.predict(in, 10))).substring(1) + "<- Output");
         
 // XOR SIGMOID
 //        Network net = new FeedForwardNetwork(Network.SIGMOID, 1);
@@ -40,7 +42,7 @@ public class Main {
 //        net.train(in, out, 100000, 20000);
 //        Data predict = new Data(new double[][] {{0,0},{0,1},{1,1},{1,0},{1,1},{0,0},{0,1},{1,1}});
 //        System.out.println("Input:\n" + predict + "\nOutput: " + Arrays.deepToString(
-//                Util.round
+//                //Util.round
 //        (net.predict(predict, 1))));
        
 // XOR HYPERTAN

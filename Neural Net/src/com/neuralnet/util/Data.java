@@ -15,15 +15,18 @@ import java.util.Arrays;
 public class Data {
     public final int length;
     private final ArrayList<double[][]> datas;
+    private int pointer;
     
     public Data(int length) {
         this.length = length;
         datas = new ArrayList<>();
+        pointer = 0;
     }
     
     public Data(double[][] data) {
         this.length = data.length;
         datas = new ArrayList<>();
+        pointer = 0;
         for(int i = 0; i < data.length; i++) { // Iterates through {0,0}
             datas.add(new double[1][data[i].length]);
             for(int j = 0; j < data[i].length; j++) { // Iterates through 0 then 1
@@ -32,15 +35,11 @@ public class Data {
         }
     }
     
-    public void set(int index, double[][] data) {
-        if(index > length - 1)
+    public void add(double[][] data) {
+        if(pointer > length - 1)
             return;
-        if(index > datas.size() - 1) {
-            datas.add(null);
-            set(index, data);
-            return;
-        }
-        datas.set(index, data);
+        datas.add(data);
+        pointer++;
     }
     
     public double[][] get(int index) {

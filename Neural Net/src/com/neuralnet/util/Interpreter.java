@@ -79,6 +79,18 @@ public class Interpreter {
         return null;
     }
     
+    public double[] accessTan(char c) {
+        return advancedMapTan.get(c);
+    }
+    
+    public Character accessTan(double[] array) {
+        for(char c : advancedMapTan.keySet()) {
+            if(compare(advancedMapTan.get(c), array))
+                return c;
+        }
+        return null;
+    }
+    
     public double[] accessTest(char c) {
         return map.get(c);
     }

@@ -52,7 +52,7 @@ public class Util {
         if(chars == null)
             return null;
         Interpreter inter = new Interpreter();
-        double[][] values = new double[chars.length][4]; // For now
+        double[][] values = new double[chars.length][26];
         for(int i = 0; i < values.length; i++) {
             values[i] = inter.access(chars[i]);
         }
@@ -70,9 +70,33 @@ public class Util {
         return chars;
     }
     
+    public static double[][] createMultiTest(char[] chars) {
+        if(chars == null)
+            return null;
+        Interpreter inter = new Interpreter();
+        double[][] values = new double[chars.length][4]; // For now
+        for(int i = 0; i < values.length; i++) {
+            values[i] = inter.accessTest(chars[i]);
+        }
+        return values;
+    }
+    
+    public static Character[] getCharacterTest(double[][] values) {
+        if(values == null)
+            return null;
+        Interpreter inter = new Interpreter();
+        Character[] chars = new Character[values.length];
+        for(int i = 0; i < chars.length; i++) {
+            chars[i] = inter.accessTest(values[i]);
+        }
+        return chars;
+    }
+    
     public static String concat(Character[] chars) {
+        if(chars == null)
+            return "Arrived At Null Value.";
         String str = "";
-        for(char c : chars)
+        for(Character c : chars)
             str += c;
         return str;
     } 
