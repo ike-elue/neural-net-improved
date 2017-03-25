@@ -78,24 +78,20 @@ Output: [[0.00118515336927537], [0.9965469634533215], [0.004338885293286528], [0
 
 
 ## An Example Recurrent Network Output:
-0th iteration --> Error: 4999.787%
+0th iteration --> Error: 3928.406%
 
-20000th iteration --> Error: 0.338%
+5000th iteration --> Error: 21.642%
 
-40000th iteration --> Error: 0.112%
+10000th iteration --> Error: 0.152%
 
-60000th iteration --> Error: 0.062%
+15000th iteration --> Error: 0.072%
 
-80000th iteration --> Error: 0.042%
+20000th iteration --> Error: 0.043%
 
-100000th iteration --> Error: 0.031%
-
-Final Sturcture For Neural Network 
+Final Sturcture For Neural Network
 
 (Weights not shown because the network consists of 26 inputs, 27 hidden, and 26 outputs)
 
-Error in Network: 0.031%
+Error in Network: 0.043%
 
-Input -> hell]o<- Output
-
-Input -> worl]d<- Output
+Created Sentence: hello its me that youre looking for 
