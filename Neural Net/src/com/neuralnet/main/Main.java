@@ -21,18 +21,21 @@ public class Main {
      */
 
     public static void main(String[] args) {
-// Recurrent SIGMOID (HYPERTAN doesn't work yet when trying to implement)
-        Network net = new RecurrentNetwork(Network.SIGMOID, 1, 4);
+// Recurrent SIGMOID
+        Network net = new RecurrentNetwork(Network.SIGMOID, 5, 7);
         net.addLayers(new int[] {26, 27, 26});
-        Data in = new Data(2);
-        in.add(Util.createMulti(new char[]{'h','e','l','l'}));
-        in.add(Util.createMulti(new char[]{'w','o','r','l'}));
-        Data out = new Data(2);
-        out.add(Util.createMulti(new char[]{'e','l','l','o'}));
-        out.add(Util.createMulti(new char[]{'o','r','l','d'}));
-        net.train(in, out, 100000, 20000);
-        System.out.println("Input -> " + Util.concat(Util.getCharacter(in.get(0))) + "]" + Util.concat(Util.getCharacter(net.predict(in, 10))).substring(0,1) + "<- Output");
-        System.out.println("Input -> " + Util.concat(Util.getCharacter(in.get(1))) + "]" + Util.concat(Util.getCharacter(net.predict(in, 10))).substring(1) + "<- Output");
+        String[] words = new String[] {"hello", "its", "me", "that", "youre", "looking", "for"};
+        Data in = new Data(words.length);
+        Data out = new Data(words.length);
+        for(String str : words) {
+            in.add(Util.createMulti(str.substring(0, str.length() - 1)));
+            out.add(Util.createMulti(str.substring(1)));
+        }
+        net.train(in, out, 20000, 5000);
+        String str = "";
+        for(int i = 0; i < words.length; i++)
+            str += Util.concat(Util.getCharacter(in.get(i))) +  Util.concat(Util.getCharacter(net.predict(in.get(i), 50))) + " ";
+        System.out.println("Created Sentence: " + str);
         
 // XOR SIGMOID
 //        Network net = new FeedForwardNetwork(Network.SIGMOID, 1);

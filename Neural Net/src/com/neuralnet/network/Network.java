@@ -110,10 +110,32 @@ public abstract class Network {
                 forward(j);
             }
             for(int j = 0; j < outputs[i].length; j++) { //Goes through each timestep output
-                outputs[i][j] = getLastLayer().getNeuron(j).getSumLast();
+                outputs[i][j] = getLastLayer().getNeuron(j).getSum(inputs.get(i).length - 1);
             }
             resetValues();
         }
+        
+        return outputs;
+    }
+    
+    public double[][] predict(double[][] inputs, int acceptablePercent) {
+        if(layers.isEmpty())
+            return null;
+        if(errorPercent != null && (int)Double.parseDouble(errorPercent.toString()) > acceptablePercent) {
+            System.out.println("Neural Net is not Good Enough Based on Percentage");
+            return null;
+        }
+        double[][] outputs = new double[1][getLastLayer().getNeurons().length];
+        for(int j = 0; j < inputs.length; j++) { // Goes through each timestep
+            for(int k = 0; k < inputs[j].length; k++) { // Goes through each data point per timestep
+                layers.get(0).getNeuron(k).setSum(inputs[j][k], j);
+            }
+            forward(j);
+        }
+        for(int j = 0; j < outputs[0].length; j++) { //Goes through each timestep output
+            outputs[0][j] = getLastLayer().getNeuron(j).getSum(inputs.length - 1);
+        }
+        resetValues();
         
         return outputs;
     }

@@ -47,11 +47,6 @@ public class RecurrentNetwork extends Network{
     }
     
     @Override
-    protected boolean conditional(Data inputs, Data outputs) {
-        return false;
-    }
-    
-    @Override
     protected void addData(Data input, Data output) {
         for(int i = 0; i < input.length; i++) {
             trainingDataIn.add(input.get(i));

@@ -10,6 +10,7 @@ package com.neuralnet.util;
  * @author CSLAB313-1740
  */
 public class Util {
+    private static Interpreter inter;
     public static double average(double[] array) {
         if(array == null)
             return 0;
@@ -48,10 +49,23 @@ public class Util {
         return a;
     }
     
+    public static double[][] createMulti(String word) {
+        if(inter == null)
+            inter = new Interpreter();
+        if(word == null)
+            return null;
+        double[][] values = new double[word.length()][26];
+        for(int i = 0; i < values.length; i++) {
+            values[i] = inter.access(word.charAt(i));
+        }
+        return values;
+    }
+    
     public static double[][] createMulti(char[] chars) {
+        if(inter == null)
+            inter = new Interpreter();
         if(chars == null)
             return null;
-        Interpreter inter = new Interpreter();
         double[][] values = new double[chars.length][26];
         for(int i = 0; i < values.length; i++) {
             values[i] = inter.access(chars[i]);
@@ -60,9 +74,10 @@ public class Util {
     }
     
     public static Character[] getCharacter(double[][] values) {
+        if(inter == null)
+            inter = new Interpreter();
         if(values == null)
             return null;
-        Interpreter inter = new Interpreter();
         Character[] chars = new Character[values.length];
         for(int i = 0; i < chars.length; i++) {
             chars[i] = inter.access(values[i]);
@@ -71,9 +86,10 @@ public class Util {
     }
     
     public static double[][] createMultiTest(char[] chars) {
+        if(inter == null)
+            inter = new Interpreter();
         if(chars == null)
             return null;
-        Interpreter inter = new Interpreter();
         double[][] values = new double[chars.length][4]; // For now
         for(int i = 0; i < values.length; i++) {
             values[i] = inter.accessTest(chars[i]);
@@ -82,9 +98,10 @@ public class Util {
     }
     
     public static Character[] getCharacterTest(double[][] values) {
+        if(inter == null)
+            inter = new Interpreter();
         if(values == null)
             return null;
-        Interpreter inter = new Interpreter();
         Character[] chars = new Character[values.length];
         for(int i = 0; i < chars.length; i++) {
             chars[i] = inter.accessTest(values[i]);
