@@ -95,3 +95,5 @@ Final Sturcture For Neural Network
 Error in Network: 0.043%
 
 Created Sentence: hello its me that youre looking for 
+
+BUILD SUCCESSFUL (total time: 45 seconds)
