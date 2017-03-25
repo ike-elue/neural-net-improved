@@ -2,56 +2,100 @@
 A Neural Network that is pretty much modular.
 
 Sometimes gets stuck in local minimum.
-## An Example Output:
+## An Example Artificial Network Output:
 
-0th iteration --> Error: 44.993%
+0th iteration --> Error: 18.703%
 
-10000th iteration --> Error: 0.009%
+20000th iteration --> Error: 0.003%
 
-20000th iteration --> Error: 0.004%
+40000th iteration --> Error: 0.001%
 
-30000th iteration --> Error: 0.003%
+60000th iteration --> Error: 0.001%
 
-40000th iteration --> Error: 0.002%
- 
+80000th iteration --> Error: 0.000%
+
+100000th iteration --> Error: 0.000%
+
 Final Sturcture For Neural Network 
- 
+
 Layer 0: 
 
 Neuron 0
 
-Weights: 4.161658405265093, 2.8429150124657054, 4.858532815435721, 7.834681038662661
+Weights: 1.1486544808462666, 6.651503296843074, -3.5097022732903156, 7.857011190661082
 
 Neuron 1
 
-Weights: 3.056021501728323, 1.5529265913278947, -6.975906137035429, -6.412483344319205
+Weights: 3.015847600484129, 6.554017680060834, 7.351309469129305, -4.415709409297812
 
 Neuron 2
 
-Weights: -0.14671605334498958, 1.16826393090996, -1.9431621198215943, 2.981921741044508
- 
+Weights: -2.8254138750288273, -1.6123968206300536, 0.34435892500279663, 1.0345344432638146
+
 Layer 1: 
 
 Neuron 0
 
-Weights: 3.894296061052145
+Weights: -3.7534910267581107
 
 Neuron 1
 
-Weights: 2.067726239999743
+Weights: 12.64888441739496
 
 Neuron 2
 
-Weights: 11.484800777384166
+Weights: -9.376678106596453
 
 Neuron 3
 
-Weights: -11.45924728131288
+Weights: -10.888105845723457
 
 Neuron 4
 
-Weights: 0.06778941402213311
+Weights: 4.891287943661661
 
-Error in Network: 0.002%
+Error in Network: 0.000%
 
-[[0.9952416712573633], [0.016147506028561544], [0.9957276777793377]]
+Input:
+
+[[0.0, 0.0]]
+
+[[0.0, 1.0]]
+
+[[1.0, 1.0]]
+
+[[1.0, 0.0]]
+
+[[1.0, 1.0]]
+
+[[0.0, 0.0]]
+
+[[0.0, 1.0]]
+
+[[1.0, 1.0]]
+
+Output: [[0.00118515336927537], [0.9965469634533215], [0.004338885293286528], [0.9963201374377165], [0.004338885293286528], [0.00118515336927537], [0.9965469634533215], [0.004338885293286528]]
+
+
+## An Example Recurrent Network Output:
+0th iteration --> Error: 4999.787%
+
+20000th iteration --> Error: 0.338%
+
+40000th iteration --> Error: 0.112%
+
+60000th iteration --> Error: 0.062%
+
+80000th iteration --> Error: 0.042%
+
+100000th iteration --> Error: 0.031%
+
+Final Sturcture For Neural Network 
+
+(Weights not shown because the network consists of 26 inputs, 27 hidden, and 26 outputs)
+
+Error in Network: 0.031%
+
+Input -> hell]o<- Output
+
+Input -> worl]d<- Output
