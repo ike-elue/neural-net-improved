@@ -1,0 +1,12 @@
+0th iteration --> Error: 3928.406%
+5000th iteration --> Error: 21.642%
+10000th iteration --> Error: 0.152%
+15000th iteration --> Error: 0.072%
+20000th iteration --> Error: 0.043%
+
+Final Sturcture For Neural Network
+(Weights not shown because the network consists of 26 inputs, 27 hidden, and 26 outputs)
+
+Error in Network: 0.043%
+Created Sentence: hello its me that youre looking for 
+BUILD SUCCESSFUL (total time: 45 seconds)
